@@ -1,4 +1,3 @@
-import "elexis";
 import { $Element } from "elexis";
 import { $Style, type $StyleParams } from "./lib/$Style";
 import { colors } from "./lib/colors";
