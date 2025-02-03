@@ -1,7 +1,7 @@
 {
   "name": "@elexis.js/style",
   "description": "Write style in JavaScript.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
@@ -21,6 +21,6 @@
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0",
-    "elexis": "^0.3.1"
+    "elexis": "^0.4.1"
   }
 }
