@@ -1,7 +1,7 @@
 {
   "name": "@elexis.js/style",
   "description": "Write style in JavaScript.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
@@ -19,13 +19,8 @@
   "keywords": ["css", "style", "design", "web", "front-end", "lib", "fluent", "framework"],
   "license": "ISC",
   "type": "module",
-  "dependencies": {
-    "elexis": "^0.3.1"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "elexis": "^0.3.1"
   }
 }
