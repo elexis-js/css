@@ -1,7 +1,7 @@
 {
-  "name": "@elexis.js/style",
-  "description": "Write style in JavaScript.",
-  "version": "0.0.4",
+  "name": "@elexis.js/css",
+  "description": "Write CSS in JavaScript.",
+  "version": "1.0.0",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
@@ -9,18 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elexis-js/style.git"
+    "url": "git+https://github.com/elexis-js/css.git"
   },
   "module": "index.ts",
   "bugs": {
-    "url": "https://github.com/elexis-js/style/issues"
+    "url": "https://github.com/elexis-js/css/issues"
   },
-  "homepage": "https://github.com/elexis-js/style",
+  "homepage": "https://github.com/elexis-js/css",
   "keywords": ["css", "style", "design", "web", "front-end", "lib", "fluent", "framework"],
   "license": "ISC",
   "type": "module",
   "peerDependencies": {
     "typescript": "^5.0.0",
-    "elexis": "^0.4.1"
+    "elexis": "^1.0.0"
   }
 }

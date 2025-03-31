@@ -1,22 +1,38 @@
 import { $Element } from "elexis";
-import { $Style, type $StyleParams } from "./lib/$Style";
+import { $CSS, type $CSSParams } from "./lib/$CSS";
 import { colors } from "./lib/colors";
 
 declare module "elexis" {
     export interface $Element {
-        style(...params: (Partial<$StyleParams> | undefined)[]): this;
+        css(...params: (Partial<$CSSParams> | undefined)[]): this;
     }
 
     export namespace $ {
         export const color: typeof colors;
-        export function style<T extends Partial<$StyleParams>>(params: T) : T
+        export function css<T extends Partial<$CSSParams>>(params: T) : T
+        export function css(...params: Partial<$CSSParams>[]) : Partial<$CSSParams>[]
     }
 }
 
 Object.assign($, {
     color: colors,
-    style(params: Partial<$StyleParams>) { return params }
+    css(...params: Partial<$CSSParams>[]) {
+        if (params.length === 1) {
+            const data = params.at(0);
+            if (data && data.selector) $CSS.insertRule(data);
+            return data;
+        } else {
+            return params.map(data => {
+                if (data && data.selector) return $CSS.insertRule(data);
+                else return data;
+            })
+        }
+    }
+        
 })
 Object.assign($Element.prototype, {
-    style(...params: (Partial<$StyleParams> | undefined)[]) { return $.fluent(this, arguments, () => this, () => { params.forEach(param => !param ? this : $Style.insertRule(param, this as $Element)); return this }) }
+    css(...params: (Partial<$CSSParams> | undefined)[]) { return $.fluent(this, arguments, () => this, () => { params.forEach(param => !param ? this : $CSS.insertRule(param, this as $Element)); return this }) }
 })
+
+export * from "./lib/$CSS";
+export * from "./lib/$CSSPropertyParams";
