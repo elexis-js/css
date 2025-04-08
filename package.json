@@ -1,11 +1,11 @@
 {
   "name": "@elexis.js/css",
   "description": "Write CSS in JavaScript.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
-    "url": "https://git.defaultkavy.com/defaultkavy"
+    "url": "https://github.com/defaultkavy"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   "license": "ISC",
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.0.0",
     "elexis": "^1.0.0"
   }
 }

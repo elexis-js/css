@@ -1,5 +1,5 @@
 # @elexis.js/style
-Style element without css file.
+Style element without css file. Base on [ElexisJS](https://github.com/defaultkavy/elexis).
 
 ## Usage
 ```ts

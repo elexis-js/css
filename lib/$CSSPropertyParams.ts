@@ -1,4 +1,4 @@
-import type { $State, $StateArgument } from "elexis";
+import type { $StateArgument } from "elexis";
 
 export type $CSSParamValue = $StateArgument<'' | 'unset' | 'initial' | 'inherit' | 'revert' | 'revert-layer' | string & {} | number>;
 export interface $CSSPropertyParams {
