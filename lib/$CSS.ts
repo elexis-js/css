@@ -67,7 +67,6 @@ export class $CSS {
                 selector = selector + data.selector;
                 let rule = `${selector} { ${RP} }`;
                 for (const property of data.value) {
-                    console.debug(property.type, property)
                     if (property.type !== 'PROPERTY') { this.selectorRuleHandler(property as $StyleParamAnalysisData<$StyleParamData>, selector); continue; }
                     rule = rule.replace(RP, `${propertyMap[property.decodedKey as keyof typeof propertyMap] ?? property.decodedKey}: ${property.value}; ${RP}`)
                 }
