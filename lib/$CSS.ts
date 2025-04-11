@@ -129,7 +129,7 @@ export class $CSS {
                 selector_list.push( {
                     ...data, atRules, 
                     classname: `${property}:${value}`, 
-                    selector: `.` + `${property}:${value}`.replaceAll(/[$.:%()#]/g, ($0, $1) => `\\${$0}`) + `${postfix}`,
+                    selector: `.` + `${property}:${value}`.replaceAll(/[!"#$%&'()*+,-./:;<=>?@\[\\\]^`{|}~\t\n\v\f\r]/g, ($0, $1) => `\\${$0}`) + `${postfix}`,
                     cachedname: property
                 } )
             }
