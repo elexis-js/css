@@ -61,30 +61,52 @@ export class $CSS {
     }
 
     private static selectorRuleHandler(data: $StyleParamAnalysisData<$StyleParamData>, selector = '') {
-        if (data.type === 'SELECTOR') {
-            selector = selector + data.selector;
-            let rule = `${selector} { _REPLACE_ }`;
-            for (const property of data.value) {
-                if (property.type !== 'PROPERTY') { this.selectorRuleHandler(property as $StyleParamAnalysisData<$StyleParamData>, selector); continue; }
-                rule = rule.replace('_REPLACE_', `${propertyMap[property.decodedKey as keyof typeof propertyMap] ?? property.decodedKey}: ${property.value}; _REPLACE_`)
+        const RP = '_REPLACE_'
+        switch (data.type) {
+            case 'SELECTOR': {
+                selector = selector + data.selector;
+                let rule = `${selector} { ${RP} }`;
+                for (const property of data.value) {
+                    console.debug(property.type, property)
+                    if (property.type !== 'PROPERTY') { this.selectorRuleHandler(property as $StyleParamAnalysisData<$StyleParamData>, selector); continue; }
+                    rule = rule.replace(RP, `${propertyMap[property.decodedKey as keyof typeof propertyMap] ?? property.decodedKey}: ${property.value}; ${RP}`)
+                }
+                rule = rule.replace(RP, '');
+                if (this.paramSet.has(rule)) return;
+                this.layer_selector.insertRule(rule, 0);
+                this.paramSet.add(rule);
+                break;
             }
-            rule = rule.replace('_REPLACE_', '');
-            if (this.paramSet.has(rule)) return;
-            this.layer_selector.insertRule(rule, 0);
-            this.paramSet.add(rule);
-        } else if (data.type === 'PSEUDO_CLASS' || data.type === 'PSEUDO_ELEMENT') {
-            selector = `${selector}${data.key.replaceAll('$', ':')}`
-            let rule = `${selector} { _REPLACE_ }`
-            for (const property of data.value) {
-                if (property.type !== 'PROPERTY') { this.selectorRuleHandler(property as $StyleParamAnalysisData<$StyleParamData>, selector); continue; }
-                rule = rule.replace('_REPLACE_', `${propertyMap[property.decodedKey as keyof typeof propertyMap]}: ${property.value}; _REPLACE_`)
+            case 'PSEUDO_CLASS':
+            case 'PSEUDO_ELEMENT': {
+                selector = `${selector}${data.key.replaceAll('$', ':')}`
+                let rule = `${selector} { _REPLACE_ }`
+                for (const property of data.value) {
+                    if (property.type !== 'PROPERTY') { this.selectorRuleHandler(property as $StyleParamAnalysisData<$StyleParamData>, selector); continue; }
+                    rule = rule.replace(RP, `${propertyMap[property.decodedKey as keyof typeof propertyMap]}: ${property.value}; ${RP}`)
+                }
+                rule = rule.replace(RP, '')
+                if (this.paramSet.has(rule)) return;
+                this.layer_selector.insertRule(rule, 0);
+                this.paramSet.add(rule);
+                break;
             }
-            rule = rule.replace('_REPLACE_', '')
-            if (this.paramSet.has(rule)) return;
-            this.layer_selector.insertRule(rule, 0);
-            this.paramSet.add(rule);
-        } else if (data.type === 'CHILDREN') {
-            this.childrenRuleHandler(data, selector)
+            case 'AT_RULE': {
+                let rule = `@${data.decodedKey} ${data.data.query} { ${selector} { _REPLACE_ } }`
+                for (const property of data.value) {
+                    if (property.type !== 'PROPERTY') { this.selectorRuleHandler(property as $StyleParamAnalysisData<$StyleParamData>, selector); continue; }
+                    rule = rule.replace(RP, `${propertyMap[property.decodedKey as keyof typeof propertyMap]}: ${property.value}; ${RP}`)
+                }
+                rule = rule.replace(RP, '')
+                if (this.paramSet.has(rule)) return;
+                this.layer_media.insertRule(rule, 0);
+                this.paramSet.add(rule);
+                break;
+            }
+            case 'CHILDREN': {
+                this.childrenRuleHandler(data, selector)
+                break;
+            }
         }
     }
 
