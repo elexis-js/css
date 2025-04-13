@@ -8,16 +8,32 @@ import 'elexis';
 import '@elexis.js/css';
 
 // Modify element's background color
-$(document.body).css({bgColor: $.color.gray[200]})
+$(document.body).css({backgroundColor: $.color.gray[200]})
 ```
 
-## Define CSS Rules
+## Define Style with Variable
 ```ts
-// Add CSS Rules with class "hello"
-$.css({
-    selector: 'span.hello',
-    fontSize: '1.2rem',
-    color: $.color.red[500]
+// Define css rule
+const buttonStyle = $.css({
+    backgroundColor: $.color.red[300],
+    color: $.color.gray[700]
+    "$&:hover": {
+        backgroundColor: $.color.cyan[300],
+    }
+})
+
+// Apply style to element
+$('button').css(buttonStyle);
+```
+
+## Define CSS Rule
+```ts
+// Add CSS Rules with selector "span.hello"
+$.CSS({
+    "$span.hello": {
+        fontSize: '1.2rem',
+        color: $.color.red[500]
+    }
 })
 
 // Apply class "hello"
