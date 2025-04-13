@@ -76,7 +76,7 @@ declare global {
         animationIterationCount?: 'infinite' | number;
         animationName?: string;
         animationPlayState?: 'running' | 'paused';
-        animationTimingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' | 'step-start' | 'step-end' | string;
+        animationTimingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' | 'step-start' | 'step-end';
         backdropFilter?: string;
         backfaceVisibility?: 'visible' | 'hidden';
         background?: string;
@@ -88,7 +88,7 @@ declare global {
         backgroundOrigin?: 'border-box' | 'padding-box' | 'content-box';
         backgroundPosition?: string;
         backgroundRepeat?: 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat' | 'space' | 'round';
-        backgroundSize?: 'auto' | 'cover' | 'contain' | string;
+        backgroundSize?: 'auto' | 'cover' | 'contain';
         border?: string;
         borderBottom?: string;
         borderBottomColor?: string;
@@ -147,7 +147,7 @@ declare global {
         content?: string;
         counterIncrement?: string;
         counterReset?: string;
-        cursor?: 'auto' | 'default' | 'none' | 'context-menu' | 'help' | 'pointer' | 'progress' | 'wait' | 'cell' | 'crosshair' | 'text' | 'vertical-text' | 'alias' | 'copy' | 'move' | 'no-drop' | 'not-allowed' | 'e-resize' | 'n-resize' | 'ne-resize' | 'nw-resize' | 's-resize' | 'se-resize' | 'sw-resize' | 'w-resize' | 'ew-resize' | 'ns-resize' | 'nesw-resize' | 'nwse-resize' | 'col-resize' | 'row-resize' | 'all-scroll' | 'zoom-in' | 'zoom-out' | 'grab' | 'grabbing' | string;
+        cursor?: 'auto' | 'default' | 'none' | 'context-menu' | 'help' | 'pointer' | 'progress' | 'wait' | 'cell' | 'crosshair' | 'text' | 'vertical-text' | 'alias' | 'copy' | 'move' | 'no-drop' | 'not-allowed' | 'e-resize' | 'n-resize' | 'ne-resize' | 'nw-resize' | 's-resize' | 'se-resize' | 'sw-resize' | 'w-resize' | 'ew-resize' | 'ns-resize' | 'nesw-resize' | 'nwse-resize' | 'col-resize' | 'row-resize' | 'all-scroll' | 'zoom-in' | 'zoom-out' | 'grab' | 'grabbing';
         direction?: 'ltr' | 'rtl';
         display?: 'block' | 'inline' | 'inline-block' | 'flex' | 'inline-flex' | 'grid' | 'inline-grid' | 'flow-root' | 'none' | 'contents' | 'table' | 'table-row' | 'table-cell' | 'table-column' | 'table-column-group' | 'table-header-group' | 'table-footer-group' | 'table-row-group' | 'list-item';
         emptyCells?: 'show' | 'hide';
@@ -205,8 +205,8 @@ declare global {
         justifyItems?: 'normal' | 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'self-start' | 'self-end' | 'left' | 'right';
         justifySelf?: 'auto' | 'normal' | 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'self-start' | 'self-end' | 'left' | 'right';
         left?: string;
-        letterSpacing?: 'normal' | string;
-        lineHeight?: 'normal' | number | string;
+        letterSpacing?: 'normal';
+        lineHeight?: 'normal' | number;
         listStyle?: string;
         listStyleImage?: string;
         listStylePosition?: 'inside' | 'outside';
@@ -312,11 +312,11 @@ declare global {
         transitionDelay?: string;
         transitionDuration?: string;
         transitionProperty?: string;
-        transitionTimingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' | 'step-start' | 'step-end' | string;
+        transitionTimingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' | 'step-start' | 'step-end';
         translate?: string;
         unicodeBidi?: 'normal' | 'embed' | 'isolate' | 'bidi-override' | 'isolate-override' | 'plaintext';
         userSelect?: 'auto' | 'none' | 'text' | 'contain' | 'all';
-        verticalAlign?: 'baseline' | 'sub' | 'super' | 'text-top' | 'text-bottom' | 'middle' | 'top' | 'bottom' | string;
+        verticalAlign?: 'baseline' | 'sub' | 'super' | 'text-top' | 'text-bottom' | 'middle' | 'top' | 'bottom';
         visibility?: 'visible' | 'hidden' | 'collapse';
         whiteSpace?: 'normal' | 'nowrap' | 'pre' | 'pre-wrap' | 'pre-line' | 'break-spaces';
         width?: string;
