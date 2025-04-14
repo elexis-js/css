@@ -9,6 +9,6 @@ export class $CSSMediaRule extends $CSSBaseRule {
     }
 
     get cssText(): string {
-        return `@media ${this.conditionText} { ${ this.properties.map((prop) => prop.cssText) } ${ this.cssRules.map(rule => `${rule.cssText} `).join('') }}`
+        return `@media ${this.conditionText} { ${ this.properties.map((prop) => prop.cssText).join(' ') } ${ this.cssRules.map(rule => `${rule.cssText} `).join(' ') }}`
     }
 }
