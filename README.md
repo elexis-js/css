@@ -1,4 +1,4 @@
-# @elexis.js/style
+# @elexis.js/css
 Style element without css file. Base on [ElexisJS](https://github.com/defaultkavy/elexis).
 
 ## Usage

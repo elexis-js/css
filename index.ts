@@ -53,13 +53,13 @@ declare global {
     
     type $CSSPropertyMap = {
         [key in keyof CSSStyleDeclaration]?: $CSSPropertyValueMap[key] | '' | 'unset' | 'initial' | 'inherit' | string & {} | number;
-    } | { [key: string]: string };
+    } | { [key: string]: any };
 
     interface $CSSSelectorMap {
         [key: `$${string}`]: $CSSOptions
     }
     interface $CSSMediaRuleMap<Nested extends boolean> {
-        [key: `@${string}`]: Nested extends true ? $CSSOptions : $CSSSelectorMap
+        [key: `@media${string}`]: Nested extends true ? $CSSOptions : $CSSSelectorMap
     }
     type $CSSPropertyValueMap = {
         [key in keyof CSSStyleDeclaration]: '' | 'unset' | 'initial' | 'inherit' | string & {} | number;
