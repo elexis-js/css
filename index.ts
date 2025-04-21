@@ -56,7 +56,7 @@ declare global {
     } | { [key: string]: any };
 
     interface $CSSSelectorMap {
-        [key: `$${string}`]: $CSSOptions
+        [key: `$${string}` | `&${string}`]: $CSSOptions
     }
     interface $CSSMediaRuleMap<Nested extends boolean> {
         [key: `@media${string}`]: Nested extends true ? $CSSOptions : $CSSSelectorMap
