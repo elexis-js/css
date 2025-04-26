@@ -1,8 +1,9 @@
-import { $Element } from "elexis";
+import 'elexis/core';
 import { colors } from "./src/lib/colors";
 import { $CSSStyleSheet } from "./src/structure/$CSSStyleSheet";
 import { $CSSStyleRule } from "./src/structure/$CSSStyleRule";
 import type { $CSSBaseRule } from "./src/structure/$CSSBaseRule";
+import { $Element } from 'elexis/src/node/$Element';
 
 Object.assign($, {
     color: colors,
@@ -22,7 +23,7 @@ Object.assign($, {
 Object.assign($Element.prototype, {
     css(...css: ($CSSOptions | undefined)[]) { 
         css.forEach(css => {
-            css ? $CSSStyleSheet.insertRule(css, {element: this as $Element}) : null
+            css ? $CSSStyleSheet.insertRule(css, {element: this as unknown as $Element}) : null
         })
         return this;
     }
@@ -32,17 +33,19 @@ export * from "./src/structure/$CSSStyleSheet";
 export * from "./src/structure/$CSSStyleRule";
 export * from "./src/structure/$CSSProperty";
 
-declare module "elexis" {
-    export interface $Element {
-        css(...params: ($CSSOptions | $CSSStyleRule | undefined)[]): this;
-    }
-
+declare module "elexis/core" {
     export namespace $ {
         export const color: typeof colors;
         export function css(options: $CSSOptions) : $CSSStyleRule;
         export function css(...options: $CSSOptions[]) : $CSSStyleRule[];
 
         export function CSS(...options: $CSSRootOptions[]): $CSSBaseRule[];
+    }
+}
+
+declare module "elexis/src/node/$Element" {
+    export interface $Element {
+        css(...params: ($CSSOptions | $CSSStyleRule | undefined)[]): this;
     }
 }
 

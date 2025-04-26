@@ -1,8 +1,8 @@
-import type { $Element } from "elexis";
 import { $CSSProperty } from "./$CSSProperty";
 import type { $CSSBaseRule } from "./$CSSBaseRule";
 import { $CSSStyleRule } from "./$CSSStyleRule";
 import { $CSSMediaRule } from "./$CSSMediaRule";
+import type { $Element } from "elexis/src/node/$Element";
 
 export class $CSSStyleSheet {
     static styleSheet = new CSSStyleSheet();
