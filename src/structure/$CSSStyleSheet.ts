@@ -3,6 +3,8 @@ import type { $CSSBaseRule } from "./$CSSBaseRule";
 import { $CSSStyleRule } from "./$CSSStyleRule";
 import { $CSSMediaRule } from "./$CSSMediaRule";
 import type { $Element } from "elexis/src/node/$Element";
+import { $CSSKeyframesRule } from "./$CSSKeyframesRule";
+import { $CSSKeyframeRule } from "./$CSSKeyframeRule";
 
 export class $CSSStyleSheet {
     static styleSheet = new CSSStyleSheet();
@@ -30,10 +32,11 @@ export class $CSSStyleSheet {
         this.construction(css);
     }
 
-    static construction(css: $CSSOptionsType, parentRule?: $CSSBaseRule) {
+    static construction(css: $CSSRuleType, parentRule?: $CSSBaseRule) {
         for (const [key, value] of Object.entries(css)) {
             const IS_SELECTOR = key.startsWith('&') || key.startsWith('$');
             const IS_MEDIA = key.startsWith('@media');
+            const IS_KEYFRAMES = key.startsWith('@keyframes');
             if (IS_SELECTOR) {
                 // selector
                 const selectorText = key.startsWith('$') ? key.slice(1) : key;
@@ -46,10 +49,18 @@ export class $CSSStyleSheet {
                 const rule = new $CSSMediaRule(value, { conditionText, parentRule: parentRule});
                 if (parentRule) parentRule.cssRules.push(rule);
                 else this.insertRuleToStyleSheet(rule)
+            } else if (IS_KEYFRAMES) {
+                // keyframes
+                const name = key.replace('@keyframes ', '');
+                const rule = new $CSSKeyframesRule(value, name);
+                this.insertRuleToStyleSheet(rule);
+            } else if (parentRule instanceof $CSSKeyframesRule) {
+                const rule = new $CSSKeyframeRule(value, key);
+                parentRule.keyframes.push(rule);
             } else {
                 // property
                 if (!parentRule) throw new Error('[$CSSStyleSheet.construction()]: css property must have parent rule')
-                parentRule?.properties.push(new $CSSProperty(key, value, parentRule));
+                if ('properties' in parentRule && parentRule.properties instanceof Array) parentRule.properties.push(new $CSSProperty(key, value, parentRule));
             }
         }
     }

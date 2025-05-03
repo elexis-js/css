@@ -1,13 +1,16 @@
 import{ $CSSBaseRule } from "./$CSSBaseRule";
+import type { $CSSProperty } from "./$CSSProperty";
 import { $CSSStyleSheet } from "./$CSSStyleSheet";
 const LETTER_STR = 'abcdefghijklmnopqrstuvwxyz';
 
 export class $CSSStyleRule extends $CSSBaseRule {
+    properties: $CSSProperty[] = [];
     selectorText: string = '';
     
     constructor(css: $CSSOptionsType, options?: {parentRule?: $CSSBaseRule, selectorText?: string}) {
         super(css, options)
         this.selectorText = options?.selectorText ?? this.generateId();
+        $CSSStyleSheet.construction(css, this);
     }
 
     get cssText(): string {

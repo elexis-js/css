@@ -51,8 +51,9 @@ declare module "elexis/src/node/$Element" {
 
 declare global {
     type $CSSOptions = $CSSSelectorMap & $CSSMediaRuleMap<true> & $CSSPropertyMap;
-    type $CSSRootOptions = $CSSSelectorMap & $CSSMediaRuleMap<false>;
+    type $CSSRootOptions = $CSSSelectorMap & $CSSMediaRuleMap<false> & $CSSKeyframesRuleMap;
     type $CSSOptionsType = $CSSOptions | $CSSRootOptions | $CSSMediaRuleMap<boolean>
+    type $CSSRuleType = $CSSOptions | $CSSRootOptions | $CSSMediaRuleMap<boolean> | $CSSKeyframesRuleMap;
     
     type $CSSPropertyMap = {
         [key in keyof CSSStyleDeclaration]?: $CSSPropertyValueMap[key] | '' | 'unset' | 'initial' | 'inherit' | string & {} | number;
@@ -62,7 +63,14 @@ declare global {
         [key: `$${string}` | `&${string}`]: $CSSOptions
     }
     interface $CSSMediaRuleMap<Nested extends boolean> {
-        [key: `@media${string}`]: Nested extends true ? $CSSOptions : $CSSSelectorMap
+        [key: `@media ${string}`]: Nested extends true ? $CSSOptions : $CSSSelectorMap
+    }
+    interface $CSSKeyframesRuleMap {
+        [key: `@keyframes ${string}`]: {
+            from?: $CSSOptions,
+            to?: $CSSOptions,
+            [key: `${number}%`]: $CSSOptions
+        }
     }
     type $CSSPropertyValueMap = {
         [key in keyof CSSStyleDeclaration]: '' | 'unset' | 'initial' | 'inherit' | string & {} | number;
