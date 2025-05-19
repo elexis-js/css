@@ -6,7 +6,7 @@ export class $CSSKeyframeRule extends $CSSBaseRule {
     keyframeText: string = '';
     properties: $CSSProperty[] = [];
     
-    constructor(css: $CSSKeyframesRuleMap, keyframeText: string) {
+    constructor(css: $CSSOptions, keyframeText: string) {
         super(css)
         this.keyframeText = keyframeText;
         $CSSStyleSheet.construction(css, this);

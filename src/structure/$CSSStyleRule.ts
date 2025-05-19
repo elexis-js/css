@@ -1,15 +1,16 @@
+import { generateId } from "#lib/generateId";
 import{ $CSSBaseRule } from "./$CSSBaseRule";
 import type { $CSSProperty } from "./$CSSProperty";
 import { $CSSStyleSheet } from "./$CSSStyleSheet";
-const LETTER_STR = 'abcdefghijklmnopqrstuvwxyz';
 
 export class $CSSStyleRule extends $CSSBaseRule {
     properties: $CSSProperty[] = [];
     selectorText: string = '';
+    declare css: $CSSOptionsType;
     
     constructor(css: $CSSOptionsType, options?: {parentRule?: $CSSBaseRule, selectorText?: string}) {
         super(css, options)
-        this.selectorText = options?.selectorText ?? this.generateId();
+        this.selectorText = options?.selectorText ?? this.generateClassName();
         $CSSStyleSheet.construction(css, this);
     }
 
@@ -17,12 +18,11 @@ export class $CSSStyleRule extends $CSSBaseRule {
         return `${this.selectorText} { ${ this.properties.map((prop) => prop.cssText).join(' ') } ${ this.cssRules.map(rule => `${rule.cssText} `).join(' ') }}`
     }
 
-    protected generateId(length = 5): string { 
-        const id = Array.from({length}, (_, i) => { 
-            const char = LETTER_STR + LETTER_STR.toUpperCase();
-            const rand = Math.round(Math.random() * char.length); return char[rand] 
-        }).join(''); 
-        if ($CSSStyleSheet.cssRuleIdMap.has(id)) return this.generateId(length);
-        $CSSStyleSheet.cssRuleIdMap.set(id, this); return `.${id}`;
+    protected generateClassName(): string { 
+        const id = generateId();
+        if ($CSSStyleSheet.ruleIdMap.has(id)) return this.generateClassName();
+        $CSSStyleSheet.ruleIdMap.set(id, this); return `.${id}`;
     }
+
+    toJSON() { return this.css }
 }

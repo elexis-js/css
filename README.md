@@ -11,7 +11,7 @@ import '@elexis.js/css';
 $(document.body).css({backgroundColor: $.color.gray[200]})
 ```
 
-## Define Style with Variable
+## Define Style in JS
 ```ts
 // Define css rule
 const buttonStyle = $.css({
@@ -26,7 +26,7 @@ const buttonStyle = $.css({
 $('button').css(buttonStyle);
 ```
 
-## Define CSS Rule
+## Define CSS Rule in JS
 ```ts
 // Add CSS Rules with selector "span.hello"
 $.CSS({
@@ -38,4 +38,38 @@ $.CSS({
 
 // Apply class "hello"
 $('span').class('hello');
+```
+
+## Define CSS Variables in JS
+```ts
+const color_var = $.css.variable({
+    foreground_color: $.color.black,
+    background_color: $.color.white
+}, {
+    '@media (prefers-color-scheme: dark)': {
+        foreground_color: $.color.white,
+        background_color: $.color.black
+    }
+})
+
+$.CSS({
+    '$html': {
+        color: color_var.foreground_color
+        backgroundColor: color_var.background_color
+    }
+})
+```
+
+## Define Keyframes in JS
+```ts
+const keyframes = $.css.keyframes({
+    zoom: {
+        from { transfrom: 'scale(0.9)' },
+        to { transfrom: 'scale(1)' }
+    }
+})
+
+$.css({
+    animation: `0.3s ease ${keyframes.zoom}`
+})
 ```

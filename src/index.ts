@@ -1,14 +1,16 @@
 import 'elexis/core';
-import { colors } from "./src/lib/colors";
-import { $CSSStyleSheet } from "./src/structure/$CSSStyleSheet";
-import { $CSSStyleRule } from "./src/structure/$CSSStyleRule";
-import type { $CSSBaseRule } from "./src/structure/$CSSBaseRule";
-import { $Element } from 'elexis/src/node/$Element';
+import { colors } from "#lib/colors";
+import { $CSSStyleSheet } from "#structure/$CSSStyleSheet";
+import { $CSSStyleRule } from "#structure/$CSSStyleRule";
+import type { $CSSBaseRule } from "#structure/$CSSBaseRule";
+import { $Element } from 'elexis/node/$Element';
+import { $CSSKeyframesRule } from '#structure/$CSSKeyframesRule';
+import { $CSSVariable } from '#structure/$CSSVariable';
 
 Object.assign($, {
     color: colors,
     css(...options: $CSSOptions[]) {
-        if (arguments.length === 1) return $CSSStyleSheet.insertRule(options[0]);
+        if (arguments.length === 1) return $CSSStyleSheet.insertRule(options[0]!);
         return options.map(css => {
             return $CSSStyleSheet.insertRule(css);
         })
@@ -18,20 +20,50 @@ Object.assign($, {
             return $CSSStyleSheet.insertCSS(css);
         })
     }
-        
 })
+
 Object.assign($Element.prototype, {
-    css(...css: ($CSSOptions | undefined)[]) { 
+    css(this: $Element, ...css: ($CSSOptions | undefined)[]) { 
         css.forEach(css => {
-            css ? $CSSStyleSheet.insertRule(css, {element: this as unknown as $Element}) : null
+            css ? $CSSStyleSheet.insertRule(css, {element: this}) : null
         })
         return this;
     }
 })
 
-export * from "./src/structure/$CSSStyleSheet";
-export * from "./src/structure/$CSSStyleRule";
-export * from "./src/structure/$CSSProperty";
+Object.assign($.css, {
+    keyframes(options: {[key: string]: $CSSKeyframesPropertyMap}) {
+        return Object.fromEntries(Object.entries(options).map(([key, keyframes]) => {
+            const rule = new $CSSKeyframesRule(keyframes, key, true)
+            $CSSStyleSheet.insertRuleToStyleSheet(rule)
+            return [key, rule]
+        }));
+    },
+    variable<K extends string>(options: {[key in K]: string}, variants?: {[key: `@media ${string}`]: {[key in K]?: string}}) {
+        // css options
+        const css = {}
+        const variableMap: {[key: string]: $CSSVariable} = {}
+        Object.entries(options).map(([name, value]) => {
+            const variable = new $CSSVariable($CSSVariable.generateName(name), value as string)
+            Object.assign(css, {[`--${variable.name}`]: value});
+            Object.assign(variableMap, {[name]: variable});
+        })
+        variants && Object.entries(variants).map(([variant, variables]) => {
+            const variantCSS: $CSSVariableMap = {};
+            Object.entries(variables).map(([name, value]) => {
+                const variable = variableMap[name] as $CSSVariable;
+                Object.assign(variantCSS, {[`--${variable.name}`]: value});
+            })
+            Object.assign(css, {[variant]: variantCSS});
+        })
+        $.CSS({'$:root': css});
+        return variableMap;
+    }
+})
+
+export * from "#structure/$CSSStyleSheet";
+export * from "#structure/$CSSStyleRule";
+export * from "#structure/$CSSProperty";
 
 declare module "elexis/core" {
     export namespace $ {
@@ -40,37 +72,46 @@ declare module "elexis/core" {
         export function css(...options: $CSSOptions[]) : $CSSStyleRule[];
 
         export function CSS(...options: $CSSRootOptions[]): $CSSBaseRule[];
+
+        export namespace css {
+            export function keyframes<K extends string>(options: {[key in K]: $CSSKeyframesPropertyMap}): { [key in K]: $CSSKeyframesRule };
+            export function variable<K extends string>(options: {[key in K]: string}, variants?: {[key: `@media ${string}`]: {[key in K]?: string}}): {[key in K]: string}
+        }
     }
 }
 
-declare module "elexis/src/node/$Element" {
+declare module "elexis/node/$Element" {
     export interface $Element {
-        css(...params: ($CSSOptions | $CSSStyleRule | undefined)[]): this;
+        css(...params: ($CSSOptions | undefined)[]): this;
     }
 }
 
 declare global {
-    type $CSSOptions = $CSSSelectorMap & $CSSMediaRuleMap<true> & $CSSPropertyMap;
+    type $CSSOptions = $CSSStyleRule | ($CSSSelectorMap & $CSSMediaRuleMap<true> & $CSSPropertyMap & $CSSVariableMap);
     type $CSSRootOptions = $CSSSelectorMap & $CSSMediaRuleMap<false> & $CSSKeyframesRuleMap;
     type $CSSOptionsType = $CSSOptions | $CSSRootOptions | $CSSMediaRuleMap<boolean>
-    type $CSSRuleType = $CSSOptions | $CSSRootOptions | $CSSMediaRuleMap<boolean> | $CSSKeyframesRuleMap;
+    type $CSSConstructType = $CSSOptions | $CSSRootOptions | $CSSMediaRuleMap<boolean> | $CSSKeyframesPropertyMap;
     
     type $CSSPropertyMap = {
         [key in keyof CSSStyleDeclaration]?: $CSSPropertyValueMap[key] | '' | 'unset' | 'initial' | 'inherit' | string & {} | number;
     } | { [key: string]: any };
 
     interface $CSSSelectorMap {
-        [key: `$${string}` | `&${string}`]: $CSSOptions
+        [key: `$${string}` | `&${string}`]: $CSSOptions;
+    }
+    interface $CSSVariableMap {
+        [key: `--${string}`]: string | number
     }
     interface $CSSMediaRuleMap<Nested extends boolean> {
         [key: `@media ${string}`]: Nested extends true ? $CSSOptions : $CSSSelectorMap
     }
     interface $CSSKeyframesRuleMap {
-        [key: `@keyframes ${string}`]: {
-            from?: $CSSOptions,
-            to?: $CSSOptions,
-            [key: `${number}%`]: $CSSOptions
-        }
+        [key: `@keyframes ${string}`]: $CSSKeyframesPropertyMap;
+    }
+    interface $CSSKeyframesPropertyMap {
+        from?: $CSSOptions,
+        to?: $CSSOptions,
+        [key: `${number | string}%`]: $CSSOptions
     }
     type $CSSPropertyValueMap = {
         [key in keyof CSSStyleDeclaration]: '' | 'unset' | 'initial' | 'inherit' | string & {} | number;
@@ -88,6 +129,7 @@ declare global {
         animationName?: string;
         animationPlayState?: 'running' | 'paused';
         animationTimingFunction?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' | 'step-start' | 'step-end';
+        animationComposition?: 'replace' | 'add' | 'accumulate';
         backdropFilter?: string;
         backfaceVisibility?: 'visible' | 'hidden';
         background?: string;
@@ -300,9 +342,10 @@ declare global {
         textCombineUpright?: 'none' | 'all';
         textDecoration?: string;
         textDecorationColor?: string;
-        textDecorationLine?: 'none' | 'underline' | 'overline' | 'line-through';
+        textDecorationLine?: 'none' | 'underline' | 'overline' | 'line-through' | 'grammar-error' | 'spelling-error';
         textDecorationStyle?: 'solid' | 'double' | 'dotted' | 'dashed' | 'wavy';
         textDecorationThickness?: string;
+        textDecorationSkipInk?: 'auto' | 'none';
         textEmphasis?: string;
         textIndent?: string;
         textJustify?: 'auto' | 'inter-word' | 'inter-character' | 'none';

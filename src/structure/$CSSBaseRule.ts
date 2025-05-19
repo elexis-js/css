@@ -2,8 +2,9 @@ export abstract class $CSSBaseRule {
     cssRules: $CSSBaseRule[] = [];
     parentRule: $CSSBaseRule | null;
     id: string | null = null;
-    
-    constructor(css: $CSSRuleType, options?: {parentRule?: $CSSBaseRule}) {
+    css: $CSSConstructType;
+    constructor(css: $CSSConstructType, options?: {parentRule?: $CSSBaseRule}) {
+        this.css = css;
         this.parentRule = options?.parentRule ?? null;
     }
 
