@@ -17,7 +17,7 @@ $(document.body).css({backgroundColor: $.color.gray[200]})
 const buttonStyle = $.css({
     backgroundColor: $.color.red[300],
     color: $.color.gray[700]
-    "$&:hover": {
+    "&:hover": {
         backgroundColor: $.color.cyan[300],
     }
 })
@@ -30,7 +30,7 @@ $('button').css(buttonStyle);
 ```ts
 // Add CSS Rules with selector "span.hello"
 $.CSS({
-    "$span.hello": {
+    "span.hello": {
         fontSize: '1.2rem',
         color: $.color.red[500]
     }
@@ -53,7 +53,7 @@ const color_var = $.css.variable({
 })
 
 $.CSS({
-    '$html': {
+    'html': {
         color: color_var.foreground_color
         backgroundColor: color_var.background_color
     }
