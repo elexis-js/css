@@ -64,8 +64,8 @@ $.CSS({
 ```ts
 const keyframes = $.css.keyframes({
     zoom: {
-        from { transfrom: 'scale(0.9)' },
-        to { transfrom: 'scale(1)' }
+        from: { transfrom: 'scale(0.9)' },
+        to: { transfrom: 'scale(1)' }
     }
 })
 
