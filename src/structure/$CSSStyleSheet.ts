@@ -60,6 +60,8 @@ export class $CSSStyleSheet {
                 } else {
                     // element selector
                     const selectorText = key.startsWith('$') ? key.slice(1) : key;
+                    console.debug(selectorText, CSS.supports(`selector(${selectorText})`))
+                    if (!CSS.supports(`selector(${selectorText})`)) continue;
                     const rule = new $CSSStyleRule(value, { selectorText, parentRule: parentRule });
                     if (parentRule) parentRule?.cssRules.push(rule);
                     else this.insertRuleToStyleSheet(rule);
