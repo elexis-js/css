@@ -5,6 +5,7 @@ import { $CSSMediaRule } from "./$CSSMediaRule";
 import type { $Element } from "elexis/node/$Element";
 import { $CSSKeyframesRule } from "./$CSSKeyframesRule";
 import { $CSSKeyframeRule } from "./$CSSKeyframeRule";
+import { $CSSVariable } from "./$CSSVariable";
 
 export class $CSSStyleSheet {
     static styleSheet = new CSSStyleSheet();
@@ -37,29 +38,32 @@ export class $CSSStyleSheet {
     static construction(css: $CSSConstructType, parentRule?: $CSSBaseRule) {
         if (css instanceof $CSSStyleRule && parentRule) css = css.css;
         for (const [key, value] of Object.entries(css)) {
-            const IS_SELECTOR = key.startsWith('&') || key.startsWith('$');
-            const IS_MEDIA = key.startsWith('@media');
-            const IS_KEYFRAMES = key.startsWith('@keyframes');
+            const IS_VAR = value instanceof $CSSVariable;
+            const IS_SELECTOR = value instanceof Object && !IS_VAR;
             if (IS_SELECTOR) {
-                // selector
-                const selectorText = key.startsWith('$') ? key.slice(1) : key;
-                const rule = new $CSSStyleRule(value, { selectorText, parentRule: parentRule });
-                if (parentRule) parentRule?.cssRules.push(rule);
-                else this.insertRuleToStyleSheet(rule);
-            } else if (IS_MEDIA) {
-                // media
-                const conditionText = key.replace('@media ', '');
-                const rule = new $CSSMediaRule(value, { conditionText, parentRule: parentRule});
-                if (parentRule) parentRule.cssRules.push(rule);
-                else this.insertRuleToStyleSheet(rule);
-            } else if (IS_KEYFRAMES) {
-                // keyframes
-                const name = key.replace('@keyframes ', '');
-                const rule = new $CSSKeyframesRule(value, name);
-                this.insertRuleToStyleSheet(rule);
-            } else if (parentRule instanceof $CSSKeyframesRule) {
-                const rule = new $CSSKeyframeRule(value, key);
-                parentRule.keyframes.push(rule);
+                const IS_MEDIA = key.startsWith('@media');
+                const IS_KEYFRAMES = key.startsWith('@keyframes');
+                if (IS_MEDIA) {
+                    // media selector
+                    const conditionText = key.replace('@media ', '');
+                    const rule = new $CSSMediaRule(value, { conditionText, parentRule: parentRule});
+                    if (parentRule) parentRule.cssRules.push(rule);
+                    else this.insertRuleToStyleSheet(rule);
+                } else if (IS_KEYFRAMES) {
+                    // keyframes
+                    const name = key.replace('@keyframes ', '');
+                    const rule = new $CSSKeyframesRule(value, name);
+                    this.insertRuleToStyleSheet(rule);
+                } else if (parentRule instanceof $CSSKeyframesRule) {
+                    const rule = new $CSSKeyframeRule(value, key);
+                    parentRule.keyframes.push(rule);
+                } else {
+                    // element selector
+                    const selectorText = key.startsWith('$') ? key.slice(1) : key;
+                    const rule = new $CSSStyleRule(value, { selectorText, parentRule: parentRule });
+                    if (parentRule) parentRule?.cssRules.push(rule);
+                    else this.insertRuleToStyleSheet(rule);
+                }
             } else {
                 // property
                 if (!parentRule) throw new Error('[$CSSStyleSheet.construction()]: css property must have parent rule')
