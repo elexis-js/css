@@ -59,7 +59,9 @@ export class $CSSStyleSheet {
                     parentRule.keyframes.push(rule);
                 } else {
                     // element selector
-                    const selectorText = key.startsWith('$') ? key.slice(1) : key;
+                    // remove $, add & before selector if nested
+                    const selectorText = key.startsWith('$') ? key.slice(1) : `${parentRule && !key.startsWith('&') ? '& ': ''}${key}`;
+                    // check css selector is supported by browser, firefox throw error when unsupported selector added
                     if (!CSS.supports(`selector(${selectorText})`)) continue;
                     const rule = new $CSSStyleRule(value, { selectorText, parentRule: parentRule });
                     if (parentRule) parentRule?.cssRules.push(rule);
